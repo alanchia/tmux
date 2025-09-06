@@ -20,5 +20,11 @@ tmux -u new -s new-session
 Add the following to ~/.bashrc
 
 ```bash
-eval "$(tmux show-environment -s)"
+# --- Normalize SSH_AUTH_SOCK for tmux + forwarded agents ---
+if [ -S "$SSH_AUTH_SOCK" ] && [ "$SSH_AUTH_SOCK" != "$HOME/.ssh/agent.sock" ]; then
+    mkdir -p ~/.ssh
+    ln -snf "$SSH_AUTH_SOCK" ~/.ssh/agent.sock
+    export SSH_AUTH_SOCK="$HOME/.ssh/agent.sock"
+fi
+
 ```
